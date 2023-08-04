@@ -1,15 +1,12 @@
 "use client";
 
-import Index from "@/app/home";
+import Index from "@/app/reservation";
 
 
-export default function Home() {
+export default function () {
   return (
     <div >
         <Index />
-
     </div>
   )
 }
-
-

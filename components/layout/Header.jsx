@@ -5,6 +5,7 @@ import Logo from "@/components/ui/Logo";
 import Search from "@/components/ui/Search";
 import {GiCancel, GiHamburgerMenu} from "react-icons/gi";
 import {usePathname} from "next/navigation";
+import Link from "next/link";
 
 const Header = () => {
 
@@ -30,16 +31,16 @@ const Header = () => {
                         }`}>
                         <ul className={"flex gap-x-2 sm:flex-row flex-col items-center"}>
                             <li className={"px-[5px] py-[10px] uppercase hover:text-primary cursor-pointer"}>
-                                <a href="">HOME</a>
+                                <Link href="/">HOME</Link>
                             </li>
                             <li className={"px-[5px] py-[10px] uppercase hover:text-primary cursor-pointer"}>
-                                <a href="">MENU</a>
+                                <Link href="/menu">MENU</Link>
                             </li>
                             <li className={"px-[5px] py-[10px] uppercase hover:text-primary cursor-pointer"}>
-                                <a href="">ABOUT</a>
+                                <a href="/about">ABOUT</a>
                             </li>
                             <li className={"px-[5px] py-[10px] uppercase hover:text-primary cursor-pointer"}>
-                                <a href="">BOOK TABLE</a>
+                                <Link href="/reservation">BOOK TABLE</Link>
                             </li>
                         </ul>
                         {
