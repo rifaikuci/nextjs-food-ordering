@@ -1,17 +1,15 @@
 import Image from "next/image";
-import Title from "@/components/ui/Title";
-import Input from "@/components/form/Input";
-import {useFormik} from "formik";
-import {profileSchema} from "@/schema/profile";
 import {useState} from "react";
 import Account from "@/app/profile/Account";
+import Password from "@/app/profile/Password";
+import Order from "@/app/profile/Order";
 
 const Index = () => {
 
     const [tabs, setTabs ] =useState(0);
 
     return (
-        <div className={"flex px-10 min-h-[calc(100vh_-_433px)] lg:flex-row flex-col"}>
+        <div className={"flex px-10 min-h-[calc(100vh_-_433px)] lg:flex-row flex-col lg:mb-0 mb-10"}>
             <div className={"lg:w-80 w-100 flex-shrink-0"}>
                 <div className={"relative flex flex-col items-center   py-5 px-10 border-2 border-b-0"}>
                     <Image src={"/images/client2.jpg"} alt={""} width={100} height={100} className={"rounded-full"} />
@@ -44,9 +42,9 @@ const Index = () => {
 
             </div>
 
-            {
-                tabs === 0 && <Account />
-            }
+            {tabs === 0 && <Account /> }
+            {tabs === 1 && <Password /> }
+            {tabs === 2 && <Order /> }
         </div>
     )
 }
