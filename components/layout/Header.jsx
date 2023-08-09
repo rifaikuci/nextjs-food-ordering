@@ -6,12 +6,14 @@ import Search from "@/components/ui/Search";
 import {GiCancel, GiHamburgerMenu} from "react-icons/gi";
 import {usePathname} from "next/navigation";
 import Link from "next/link";
+import {useSelector} from "react-redux";
 
 const Header = () => {
 
     const [isSearchModal, setIsSearchModal] = useState(false);
     const [isMenuModal, setIsMenuModal] = useState(false);
 
+    const cart = useSelector((state) => state.cart);
     const pathname = usePathname()
     return (
         <div>
@@ -61,11 +63,17 @@ const Header = () => {
                         </span>
 
 
-                        <span>
+
                             <Link href="/cart">
+                                <span className={"relative"}>
+
                                 <FaShoppingCart className={"hover:text-primary transition-all cursor-pointer"}/>
+                                <span className={"w-4 h-4 text-xs grid place-content-center rounded-full bg-primary absolute -top-2 -right-3 text-black font-bold"}>
+                                    {cart.products.length === 0 ? "0" : cart.products.length}
+                                </span>
+                                </span>
+
                             </Link>
-                        </span>
 
 
 
