@@ -3,12 +3,24 @@ import Link from "next/link";
 import { registerSchema} from "@/schema/register";
 import Title from "@/components/ui/Title";
 import Input from "@/components/form/Input";
+import axios from "axios";
+import {toast} from "react-toastify";
 
 const Register = () => {
     const onSubmit = async (values, actions) => {
-        await new Promise((resolve) => setTimeout(resolve, 4000));
+
+        try {
+            const res = await  axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/register/`, values);
+            if(res.status === 200) {
+                console.log(res);
+                toast.success("User created successful")
+            }
+        }catch (e) {
+            toast.error(e.response.data.message)
+        }
         actions.resetForm();
     };
+
     const { values, errors, touched, handleSubmit, handleChange, handleBlur } =
         useFormik({
             initialValues: {
@@ -78,7 +90,7 @@ const Register = () => {
                     ))}
                 </div>
                 <div className="flex flex-col w-full gap-y-3 mt-6">
-                    <button className="btn-primary">REGISTER</button>
+                    <button className="btn-primary" type={"submit"}>REGISTER</button>
                     <Link href="/auth/login">
             <span className="text-sm underline cursor-pointer text-secondary">
               Do you no have a account?

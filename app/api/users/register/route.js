@@ -1,6 +1,7 @@
 import {NextResponse} from "next/server";
 import dbConnect from "@/util/dbConnect";
 import User from "@/models/User";
+import bcrypt from "bcryptjs";
 
 export const config = {
     api: {
@@ -8,30 +9,33 @@ export const config = {
     },
 };
 
-export async function GET(req ) {
-    await dbConnect();
-    const body = req.body;
-
-
-    let res;
-    try {
-         res = await User.find();
-
-        console.log(res)
-    } catch (err) {
-        console.log(err);
-    }
-
-
-    return NextResponse.json( res);
-}
-
-
 export async function POST(req ) {
     await dbConnect();
-    const res = await req.json() // res now contains body
+    const body =  await  req.json();
+    console.log(body)
+    const user = await User.findOne({email: body.email});
 
-    await User.create(res);
+    if (user) {
+        return NextResponse.json(  {
+            message: "User already exists",
 
-    return NextResponse.json( res);
+        }, {status : 406})
+    }
+
+    try {
+        const newUser = await new User(body);
+        const salt = await bcrypt.genSalt(10);
+        newUser.password = await bcrypt.hash(newUser.password, salt);
+        newUser.confirmPassword = await bcrypt.hash(newUser.confirmPassword, salt);
+        await newUser.save();
+        return NextResponse.json(newUser, {
+            status :200
+        });
+
+    } catch (err) {
+        console.log(err)
+    }
 }
+
+
+
