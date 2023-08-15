@@ -1,13 +1,58 @@
 import Image from "next/image";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Order from "@/app/admin/order";
 import Products from "@/components/admin/Products";
 import Category from "@/app/admin/category";
 import Footer from "@/app/admin/footer";
+import {useRouter} from "next/navigation";
+import axios from "axios";
+import {toast} from "react-toastify";
 
 const Index = () => {
 
     const [tabs, setTabs ] =useState(0);
+
+    const {push}  = useRouter();
+
+
+    useEffect(() => {
+        const delayedMethod = async () => {
+            try {
+                const res = await axios.get(
+                    `${process.env.NEXT_PUBLIC_API_URL}/admin`
+                );
+
+                console.log(res.status)
+
+                if(res.status === 406) {
+                    push("/admin")
+                }
+
+            } catch (err) {
+                push("/admin")
+            }
+        };
+
+        const timer = setTimeout(delayedMethod, 2000);
+        return () => {
+            clearTimeout(timer);
+        };
+    }, []); // Bo
+
+    const closeAdminAccount = async () => {
+        try {
+            if(confirm("Are you sure you want to close your admin account ?")) {
+                const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/admin`);
+                console.log("denene", res)
+                if (res.status === 200) {
+                    push("/admin");
+                    toast.success("Admin Account Closed");
+                }
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
     return (
         <div className={"flex px-10 min-h-[calc(100vh_-_433px)] lg:flex-row flex-col lg:mb-0 mb-10"}>
@@ -44,10 +89,9 @@ const Index = () => {
                     </li>
 
 
-                    <li className={`${tabs === 4  ? 'bg-primary text-white' : ''} border w-full p-3 cursor-pointer hover:bg-primary hover:text-white transition-all` }
-                        onClick={()=> setTabs(4) }>
+                    <li className={`${tabs === 4  ? 'bg-primary text-white' : ''} border w-full p-3 cursor-pointer hover:bg-primary hover:text-white transition-all` }>
                         <i className={"fa fa-sign-out"}></i>
-                        <button className={"ml-1"}>Exit</button>
+                        <button onClick={closeAdminAccount} className={"ml-1"}>Exit</button>
                     </li>
                 </ul>
 
@@ -60,5 +104,7 @@ const Index = () => {
         </div>
     )
 }
+
+
 
 export default Index;

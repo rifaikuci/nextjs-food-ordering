@@ -7,7 +7,6 @@ import { useSession, signIn, signOut } from "next-auth/react"
 
 const Login = () => {
     const {data : session} =useSession();
-    console.log(session)
     const onSubmit = async (values, actions) => {
         const { email, password } = values;
         let options = { redirect: false, email, password };
