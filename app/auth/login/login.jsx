@@ -1,19 +1,78 @@
-import { useFormik } from "formik";
+import {useFormik} from "formik";
 import Link from "next/link";
 import {loginSchema} from "@/schema/login";
 import Title from "@/components/ui/Title";
 import Input from "@/components/form/Input";
-import { useSession, signIn, signOut } from "next-auth/react"
+import {useSession, signIn} from "next-auth/react"
+import {useEffect, useState} from "react";
+import {useRouter} from "next/navigation";
+import axios from "axios";
+import bcrypt from "bcryptjs";
 
 const Login = () => {
-    const {data : session} =useSession();
+
+    useEffect(() => {
+        const delayedMethod = async () => {
+            try {
+                const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users`);
+                const user = res.data?.find((user) => user.email === session?.user.email);
+
+                if (session && user) {
+                    return {
+                        redirect: {
+                            destination: "/profile/" + user._id,
+                            permanent: false,
+                        },
+
+                    }
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        };
+
+        const timer = setTimeout(delayedMethod, 300);
+        return () => {
+            clearTimeout(timer);
+        };
+    }, []); // Bo
+
+
+    const {data: session} = useSession();
+    const {push} = useRouter();
+    const [currentUser, setCurrentUser] = useState();
+
     const onSubmit = async (values, actions) => {
-        const { email, password } = values;
-        let options = { redirect: false, email, password };
-        const res = await signIn("credentials", options);
-        /*   actions.resetForm(); */
+        const {email, password} = values;
+        let options = {redirect: false, email, password};
+        try {
+            const res = await signIn("credentials", options);
+            actions.resetForm();
+        } catch (err) {
+            console.log(err);
+        }
     };
-    const { values, errors, touched, handleSubmit, handleChange, handleBlur } =
+
+
+    useEffect(() => {
+
+        const getUser = async () => {
+
+            try {
+                const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users`);
+                setCurrentUser(
+                    res.data?.find((user) => user.email === session?.user?.email)
+                );
+                push("/profile/" + currentUser?._id);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+
+        if(currentUser || session)   getUser();
+    }, [session, push, currentUser]);
+
+    const {values, errors, touched, handleSubmit, handleChange, handleBlur} =
         useFormik({
             initialValues: {
                 email: "",

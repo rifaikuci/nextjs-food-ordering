@@ -5,14 +5,17 @@ import Title from "@/components/ui/Title";
 import Input from "@/components/form/Input";
 import axios from "axios";
 import {toast} from "react-toastify";
+import {useRouter} from "next/navigation";
 
 const Register = () => {
+
+    const  {push} = useRouter();
     const onSubmit = async (values, actions) => {
 
         try {
             const res = await  axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/register/`, values);
             if(res.status === 200) {
-                console.log(res);
+                push("/auth/login")
                 toast.success("User created successful")
             }
         }catch (e) {

@@ -1,12 +1,12 @@
 "use client";
 
-import Index from "@/app/profile";
+import Id from "@/app/profile/[id]";
 
 
 export default function () {
   return (
     <div >
-        <Index />
+        <Id />
     </div>
   )
 }
