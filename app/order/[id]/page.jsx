@@ -1,6 +1,43 @@
-import Image from "next/image";
+"use client";
 
-const Index = () => {
+import Image from "next/image";
+import {useEffect, useState} from "react";
+import axios from "axios";
+
+const Index = ({params}) => {
+
+
+
+    const [order, setOrder] = useState(null);
+
+    useEffect(() => {
+        const delayedMethod = async () => {
+            try {
+                const res = await axios.get(
+                    `${process.env.NEXT_PUBLIC_API_URL}/orders/${params.id}`
+                );
+
+                setOrder(res.data ? res.data : null);
+
+            } catch (err) {
+                console.log(err);
+            }
+        };
+
+        const timer = setTimeout(delayedMethod, 300);
+        return () => {
+            clearTimeout(timer);
+        };
+    }, []); // Bo
+
+    const status = order?.status;
+
+    const statusClass = (index) => {
+        if (index - status < 1) return "";
+        if (index - status === 1) return "animate-pulse";
+        if (index - status > 1) return "";
+    };
+
     return (
         <div className="overflow-x-auto">
             <div className="min-h-[calc(100vh_-_433px)] flex  justify-center items-center flex-col p-10  min-w-[1000px]">
@@ -25,23 +62,23 @@ const Index = () => {
                         <tbody>
                         <tr className="transition-all bg-secondary border-gray-700 hover:bg-primary ">
                             <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white flex items-center gap-x-1 justify-center">
-                                63107f5559...
+                                {order?._id.substring(0, 5)}...
                             </td>
                             <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                                Emin Başbayan
+                                {order?.customer}
                             </td>
                             <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                                Adana
+                                {order?.address}
                             </td>
                             <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                                $18
+                                ${order?.total}
                             </td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
                 <div className="flex justify-between w-full p-10 bg-primary mt-6">
-                    <div className="relative flex flex-col">
+                    <div className={`relative flex flex-col ${statusClass(0)}`}>
                         <Image
                             src="/images/paid.png"
                             alt=""
@@ -51,7 +88,7 @@ const Index = () => {
                         />
                         <span>Payment</span>
                     </div>
-                    <div className="relative flex flex-col animate-pulse">
+                    <div className={`relative flex flex-col ${statusClass(1)}`}>
                         <Image
                             src="/images/bake.png"
                             alt=""
@@ -61,7 +98,7 @@ const Index = () => {
                         />
                         <span>Preparing</span>
                     </div>
-                    <div className="relative flex flex-col">
+                    <div className={`relative flex flex-col ${statusClass(2)}`}>
                         <Image
                             src="/images/bike.png"
                             alt=""
@@ -71,7 +108,7 @@ const Index = () => {
                         />
                         <span>On the way</span>
                     </div>
-                    <div className="relative flex flex-col">
+                    <div className={`relative flex flex-col ${statusClass(3)}`}>
                         <Image
                             src="/images/delivered.png"
                             alt=""
