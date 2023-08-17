@@ -1,6 +1,6 @@
 "use client";
 
-import Index from "@/app/admin/order";
+import Index from "@/app/admin/category";
 
 
 export default function () {

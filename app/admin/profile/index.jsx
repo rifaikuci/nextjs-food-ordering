@@ -7,12 +7,14 @@ import Footer from "@/app/admin/footer";
 import {useRouter} from "next/navigation";
 import axios from "axios";
 import {toast} from "react-toastify";
+import AddProduct from "@/components/AddProduct";
 
 const Index = () => {
 
     const [tabs, setTabs ] =useState(0);
 
     const {push}  = useRouter();
+    const [isProductModal, setIsProductModal] = useState(false);
 
 
     useEffect(() => {
@@ -101,6 +103,14 @@ const Index = () => {
             {tabs === 1 && <Order /> }
             {tabs === 2 && <Category /> }
             {tabs === 3 && <Footer /> }
+            {isProductModal && <AddProduct setIsProductModal={setIsProductModal} />}
+            <button
+                className="btn-primary !w-12 !h-12 !p-0 absolute bottom-14 right-10 text-4xl"
+                onClick={() => setIsProductModal(true)}
+            >
+                +
+            </button>
+
         </div>
     )
 }

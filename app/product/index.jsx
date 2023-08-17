@@ -1,3 +1,5 @@
+"use client";
+
 import Title from "@/components/ui/Title";
 import Image from "next/image";
 import {useState} from "react";

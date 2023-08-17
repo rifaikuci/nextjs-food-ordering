@@ -9,6 +9,9 @@ const nextConfig = {
             topLevelAwait: true,
         }
         return config
+    },
+    images: {
+        domains: ["res.cloudinary.com"],
     }
 }
 
