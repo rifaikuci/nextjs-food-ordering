@@ -4,6 +4,7 @@ import {useFormik} from "formik";
 import {profileSchema} from "@/schema/profile";
 import axios from "axios";
 import {useRouter} from "next/navigation";
+import {toast} from "react-toastify";
 
 
 const Account = ({user}) => {
@@ -19,6 +20,9 @@ const Account = ({user}) => {
 
             push("/profile/" + res.data?._id);
 
+            if (res.status === 200) {
+                toast.success("Profile updated successfully");
+            }
 
         } catch (err) {
             console.log(err);
